@@ -135,6 +135,7 @@ type processorTypes =
   | AMAZONPAY
   | WORLDPAYMODULAR
   | SANTANDER
+  | XUPERMA
 
 type payoutProcessorTypes =
   | ADYEN
@@ -150,6 +151,7 @@ type payoutProcessorTypes =
   | LOONIO
   | WORLDPAY
   | WORLDPAYXML
+  | XUPERMA
 
 type threeDsAuthenticatorTypes =
   | THREEDSECUREIO

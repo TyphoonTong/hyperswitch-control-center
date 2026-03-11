@@ -32,6 +32,7 @@ let payoutConnectorList: array<connectorTypes> = [
   PayoutProcessor(LOONIO),
   PayoutProcessor(WORLDPAY),
   PayoutProcessor(WORLDPAYXML),
+  PayoutProcessor(XUPERMA),
 ]
 
 let payoutConnectorListForLive: array<connectorTypes> = [
@@ -48,6 +49,7 @@ let payoutConnectorListForLive: array<connectorTypes> = [
   PayoutProcessor(LOONIO),
   PayoutProcessor(WORLDPAY),
   PayoutProcessor(WORLDPAYXML),
+  PayoutProcessor(XUPERMA),
 ]
 
 let threedsAuthenticatorList: array<connectorTypes> = [
@@ -176,6 +178,7 @@ let connectorList: array<connectorTypes> = [
   Processors(AMAZONPAY),
   Processors(WORLDPAYMODULAR),
   Processors(SANTANDER),
+  Processors(XUPERMA),
 ]
 
 let connectorListForLive: array<connectorTypes> = [
@@ -223,6 +226,7 @@ let connectorListForLive: array<connectorTypes> = [
   Processors(WORLDPAYMODULAR),
   Processors(PAYJUSTNOW),
   Processors(PAYJUSTNOWINSTORE),
+  Processors(XUPERMA),
 ]
 
 let connectorListWithAutomaticFlow = [PAYPAL]
@@ -848,6 +852,10 @@ let worldpayModularInfo = {
   description: "Worldpaymodular is a payment gateway and PSP enabling secure online transactions, It utilizes modular API's of WorldPay.",
 }
 
+let xupermaInfo = {
+  description: "Xuperma is a cutting-edge payment gateway aggregator designed to transform the way you handle transactions. With its unmatched flexibility and advanced technology, Xuperma revolutionizes payment processing with seamless routing to multiple banks and automatic failover mechanism.",
+}
+
 let santanderInfo = {
   description: "Banco Santander is a Spanish multinational financial services group founded in 1857, with a global retail and commercial banking presence across Europe and the Americas, serving millions of customers with banking, credit, investment, and payment services.",
 }
@@ -961,6 +969,7 @@ let getConnectorNameString = (connector: processorTypes) =>
   | AMAZONPAY => "amazonpay"
   | WORLDPAYMODULAR => "worldpaymodular"
   | SANTANDER => "santander"
+  | XUPERMA => "xuperma"
   }
 
 let getPayoutProcessorNameString = (payoutProcessor: payoutProcessorTypes) =>
@@ -978,6 +987,7 @@ let getPayoutProcessorNameString = (payoutProcessor: payoutProcessorTypes) =>
   | LOONIO => "loonio"
   | WORLDPAY => "worldpay"
   | WORLDPAYXML => "worldpayxml"
+  | XUPERMA => "xuperma"
   }
 
 let getThreeDsAuthenticatorNameString = (threeDsAuthenticator: threeDsAuthenticatorTypes) =>
@@ -1153,6 +1163,7 @@ let getConnectorNameTypeFromString = (connector, ~connectorType=ConnectorTypes.P
     | "amazonpay" => Processors(AMAZONPAY)
     | "worldpaymodular" => Processors(WORLDPAYMODULAR)
     | "santander" => Processors(SANTANDER)
+    | "xuperma" => Processors(XUPERMA)
     | _ => UnknownConnector("Not known")
     }
   | PayoutProcessor =>
@@ -1170,6 +1181,7 @@ let getConnectorNameTypeFromString = (connector, ~connectorType=ConnectorTypes.P
     | "loonio" => PayoutProcessor(LOONIO)
     | "worldpay" => PayoutProcessor(WORLDPAY)
     | "worldpayxml" => PayoutProcessor(WORLDPAYXML)
+    | "xuperma" => PayoutProcessor(XUPERMA)
     | _ => UnknownConnector("Not known")
     }
   | ThreeDsAuthenticator =>
@@ -1323,6 +1335,7 @@ let getProcessorInfo = (connector: ConnectorTypes.processorTypes) => {
   | AMAZONPAY => amazonpayinfo
   | WORLDPAYMODULAR => worldpayModularInfo
   | SANTANDER => santanderInfo
+  | XUPERMA => xupermaInfo
   }
 }
 
@@ -1341,6 +1354,7 @@ let getPayoutProcessorInfo = (payoutconnector: ConnectorTypes.payoutProcessorTyp
   | LOONIO => loonioInfo
   | WORLDPAY => worldpayInfo
   | WORLDPAYXML => worldpayxmlInfo
+  | XUPERMA => xupermaInfo
   }
 }
 
@@ -2289,6 +2303,7 @@ let getDisplayNameForProcessor = (connector: ConnectorTypes.processorTypes) =>
   | AMAZONPAY => "Amazon Pay"
   | WORLDPAYMODULAR => "Worldpay Modular"
   | SANTANDER => "Santander"
+  | XUPERMA => "Xuperma"
   }
 
 let getDisplayNameForPayoutProcessor = (payoutProcessor: ConnectorTypes.payoutProcessorTypes) =>
@@ -2306,6 +2321,7 @@ let getDisplayNameForPayoutProcessor = (payoutProcessor: ConnectorTypes.payoutPr
   | LOONIO => "Loonio"
   | WORLDPAY => "Worldpay"
   | WORLDPAYXML => "Worldpay WPG"
+  | XUPERMA => "Xuperma"
   }
 
 let getDisplayNameForThreedsAuthenticator = threeDsAuthenticator =>

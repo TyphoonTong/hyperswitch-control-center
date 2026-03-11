@@ -23,5 +23,9 @@ package-lock.json
 screenshots
 downloads
 .env
+.env.local
+.env.*.local
+*.key
+*.crt
 .nyc_output
 coverage
