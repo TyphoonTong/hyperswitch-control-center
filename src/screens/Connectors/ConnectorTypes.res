@@ -136,6 +136,7 @@ type processorTypes =
   | WORLDPAYMODULAR
   | SANTANDER
   | XUPERMA
+  | REVOLV3
 
 type payoutProcessorTypes =
   | ADYEN
@@ -152,6 +153,7 @@ type payoutProcessorTypes =
   | WORLDPAY
   | WORLDPAYXML
   | XUPERMA
+  | TRUELAYER
 
 type threeDsAuthenticatorTypes =
   | THREEDSECUREIO

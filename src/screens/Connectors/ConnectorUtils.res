@@ -33,6 +33,7 @@ let payoutConnectorList: array<connectorTypes> = [
   PayoutProcessor(WORLDPAY),
   PayoutProcessor(WORLDPAYXML),
   PayoutProcessor(XUPERMA),
+  PayoutProcessor(TRUELAYER),
 ]
 
 let payoutConnectorListForLive: array<connectorTypes> = [
@@ -179,6 +180,7 @@ let connectorList: array<connectorTypes> = [
   Processors(WORLDPAYMODULAR),
   Processors(SANTANDER),
   Processors(XUPERMA),
+  Processors(REVOLV3),
 ]
 
 let connectorListForLive: array<connectorTypes> = [
@@ -860,6 +862,14 @@ let santanderInfo = {
   description: "Banco Santander is a Spanish multinational financial services group founded in 1857, with a global retail and commercial banking presence across Europe and the Americas, serving millions of customers with banking, credit, investment, and payment services.",
 }
 
+let revolv3Info = {
+  description: "Revolv3 is a specialized, AI-driven payment orchestration platform designed to maximize subscription billing approval rates and reduce involuntary churn for e-commerce merchant.",
+}
+
+let truelayerInfo = {
+  description: "A leading open banking payments and financial data platform that enables secure, real-time bank-to-bank payments, identity verification and direct access to bank account data via authorised APIs.",
+}
+
 let getConnectorNameString = (connector: processorTypes) =>
   switch connector {
   | ADYEN => "adyen"
@@ -970,6 +980,7 @@ let getConnectorNameString = (connector: processorTypes) =>
   | WORLDPAYMODULAR => "worldpaymodular"
   | SANTANDER => "santander"
   | XUPERMA => "xuperma"
+  | REVOLV3 => "revolv3"
   }
 
 let getPayoutProcessorNameString = (payoutProcessor: payoutProcessorTypes) =>
@@ -988,6 +999,7 @@ let getPayoutProcessorNameString = (payoutProcessor: payoutProcessorTypes) =>
   | WORLDPAY => "worldpay"
   | WORLDPAYXML => "worldpayxml"
   | XUPERMA => "xuperma"
+  | TRUELAYER => "truelayer"
   }
 
 let getThreeDsAuthenticatorNameString = (threeDsAuthenticator: threeDsAuthenticatorTypes) =>
@@ -1164,6 +1176,7 @@ let getConnectorNameTypeFromString = (connector, ~connectorType=ConnectorTypes.P
     | "worldpaymodular" => Processors(WORLDPAYMODULAR)
     | "santander" => Processors(SANTANDER)
     | "xuperma" => Processors(XUPERMA)
+    | "revolv3" => Processors(REVOLV3)
     | _ => UnknownConnector("Not known")
     }
   | PayoutProcessor =>
@@ -1182,6 +1195,7 @@ let getConnectorNameTypeFromString = (connector, ~connectorType=ConnectorTypes.P
     | "worldpay" => PayoutProcessor(WORLDPAY)
     | "worldpayxml" => PayoutProcessor(WORLDPAYXML)
     | "xuperma" => PayoutProcessor(XUPERMA)
+    | "truelayer" => PayoutProcessor(TRUELAYER)
     | _ => UnknownConnector("Not known")
     }
   | ThreeDsAuthenticator =>
@@ -1336,6 +1350,7 @@ let getProcessorInfo = (connector: ConnectorTypes.processorTypes) => {
   | WORLDPAYMODULAR => worldpayModularInfo
   | SANTANDER => santanderInfo
   | XUPERMA => xupermaInfo
+  | REVOLV3 => revolv3Info
   }
 }
 
@@ -1355,6 +1370,7 @@ let getPayoutProcessorInfo = (payoutconnector: ConnectorTypes.payoutProcessorTyp
   | WORLDPAY => worldpayInfo
   | WORLDPAYXML => worldpayxmlInfo
   | XUPERMA => xupermaInfo
+  | TRUELAYER => truelayerInfo
   }
 }
 
@@ -2069,6 +2085,7 @@ let constructConnectorRequestBody = (wasmRequest: wasmRequest, payload: JSON.t) 
         : connectorAdditionalMerchantData->JSON.Encode.object,
     ),
     ("connector_label", dict->getString("connector_label", "")->JSON.Encode.string),
+    ("disabled", dict->getBool("disabled", false)->JSON.Encode.bool),
     ("status", dict->getString("status", "active")->JSON.Encode.string),
     (
       "pm_auth_config",
@@ -2304,6 +2321,7 @@ let getDisplayNameForProcessor = (connector: ConnectorTypes.processorTypes) =>
   | WORLDPAYMODULAR => "Worldpay Modular"
   | SANTANDER => "Santander"
   | XUPERMA => "Xuperma"
+  | REVOLV3 => "Revolv3"
   }
 
 let getDisplayNameForPayoutProcessor = (payoutProcessor: ConnectorTypes.payoutProcessorTypes) =>
@@ -2322,6 +2340,7 @@ let getDisplayNameForPayoutProcessor = (payoutProcessor: ConnectorTypes.payoutPr
   | WORLDPAY => "Worldpay"
   | WORLDPAYXML => "Worldpay WPG"
   | XUPERMA => "Xuperma"
+  | TRUELAYER => "Truelayer"
   }
 
 let getDisplayNameForThreedsAuthenticator = threeDsAuthenticator =>
@@ -2478,5 +2497,25 @@ let stepsArr = (~connector) => {
   switch connector->getConnectorNameTypeFromString {
   | Processors(PAYSAFE) => [IntegFields, PaymentMethods, CustomMetadata, SummaryAndTest]
   | _ => [IntegFields, PaymentMethods, SummaryAndTest]
+  }
+}
+
+let checkIfPredecryptFlowEnabledForApplePay = connector => {
+  switch connector->getConnectorNameTypeFromString {
+  | Processors(NUVEI)
+  | Processors(ADYEN)
+  | Processors(CHECKOUT)
+  | Processors(WORLDPAYVANTIV) => true
+  | _ => false
+  }
+}
+
+let checkIfPredecryptFlowEnabledForGooglePay = connector => {
+  switch connector->getConnectorNameTypeFromString {
+  | Processors(NUVEI)
+  | Processors(ADYEN)
+  | Processors(CHECKOUT)
+  | Processors(WORLDPAYVANTIV) => true
+  | _ => false
   }
 }

@@ -96,6 +96,7 @@ let getAttemptCell = (attempt: attempts, attemptColType: attemptColType): Table.
   | ReferenceID => Text(attempt.reference_id)
   | ClientSource => Text(attempt.client_source)
   | ClientVersion => Text(attempt.client_version)
+  | HyperswitchErrorDescription => Text(attempt.hyperswitch_error_description->Option.getOr(""))
   }
 }
 
@@ -207,6 +208,7 @@ let attemptDetailsField = [
   ReferenceID,
   ClientSource,
   ClientVersion,
+  HyperswitchErrorDescription,
 ]
 
 let getRefundHeading = (refundsColType: refundsColType) => {
@@ -256,6 +258,12 @@ let getAttemptHeading = (attemptColType: attemptColType) => {
   | ReferenceID => Table.makeHeaderInfo(~key="reference_id", ~title="Reference ID")
   | ClientSource => Table.makeHeaderInfo(~key="client_source", ~title="Client Source")
   | ClientVersion => Table.makeHeaderInfo(~key="client_version", ~title="Client Version")
+  | HyperswitchErrorDescription =>
+    Table.makeHeaderInfo(
+      ~key="hyperswitch_error_description",
+      ~title="Hyperswitch Error Description",
+      ~description="This is a derived property by Hyperswitch based on the PSP and Issuer Errors(If available)",
+    )
   }
 }
 
@@ -376,7 +384,7 @@ let getHeading = (colType: colType) => {
   | ConnectorTransactionID =>
     Table.makeHeaderInfo(~key="connector_transaction_id", ~title="Connector Transaction ID")
   | Created => Table.makeHeaderInfo(~key="created", ~title="Created", ~showSort=true)
-  | Modified => Table.makeHeaderInfo(~key="modified_at", ~title="Modified")
+  | Modified => Table.makeHeaderInfo(~key="modified", ~title="Modified", ~showSort=true)
   | Currency => Table.makeHeaderInfo(~key="currency", ~title="Currency")
   | CustomerId => Table.makeHeaderInfo(~key="customer_id", ~title="Customer ID")
   | Description => Table.makeHeaderInfo(~key="description", ~title="Description")
@@ -712,6 +720,7 @@ let getCell = (order, colType: colType, merchantId, orgId): Table.cell => {
         url={`/payments/${order.payment_id}/${order.profile_id}/${merchantId}/${orgId}`}
         displayValue={order.payment_id}
         copyValue={Some(order.payment_id)}
+        endValue={HSwitchOrderUtils.idCellEndValue}
       />,
       "",
     )
@@ -780,7 +789,7 @@ let getCell = (order, colType: colType, merchantId, orgId): Table.cell => {
   | NextAction => Text(order.next_action)
   | CancellationReason => Text(order.cancellation_reason)
   | ErrorCode => Text(order.error.error_code)
-  | ErrorMessage => EllipsisText(order.error.error_message,"w-40")
+  | ErrorMessage => EllipsisText(order.error.error_message, "w-40")
   | ConnectorTransactionID =>
     CustomCell(
       <CopyTextCustomComp
